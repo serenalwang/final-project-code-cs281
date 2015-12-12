@@ -1,0 +1,4 @@
+program_number,num_functions,num_function_calls,total_time,highest_percent_time,highest_percent_calls,var_function_times,var_function_calls,max_num_parents,max_num_children,num_recursive_calls
+1,1,10753929,0.01,101.03,100.0,0.0,0.0,1,1,0
+2,1,1,23.510000000000002,101.18,100.0,0.0,0.0,1,1,0
+3,2,2,2.2200000000000002,100.66,50.0,1.2321000000000002,0.0,1,2,0
