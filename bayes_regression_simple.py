@@ -14,9 +14,9 @@ print "IMPORTING DATA"
 X_raw, y_raw = ascdata.get_asc_data()
 X, y = ascdata.remove_zeros(X_raw, y_raw)
 # Data isolated for all breakpoints from a specific program.
-X_prog1, y_prog1 = ascdata.get_bp_data(1, 0, X, y)
-X_prog2, y_prog2 = ascdata.get_bp_data(2, 0, X, y)
-X_prog3, y_prog3 = ascdata.get_bp_data(3, 0, X, y)
+# X_prog1, y_prog1 = ascdata.get_bp_data(1, 0, X, y)
+# X_prog2, y_prog2 = ascdata.get_bp_data(2, 0, X, y)
+# X_prog3, y_prog3 = ascdata.get_bp_data(3, 0, X, y)
 
 ### GET PREDICTIONS ###
 print "GETTING PREDICTIONS"
@@ -58,31 +58,31 @@ def plot_predictions(prog_num, bp, inX, iny, wridge, all, test):
     y_bp_pred = np.dot(X_bp, wridge)
     plot_inputs = X_bp.T[2]
     plt.plot(plot_inputs, y_bp, 'bx')
-    plt.plot(plot_inputs, y_bp_pred, 'g')
+    plt.plot(plot_inputs, y_bp_pred, 'go')
     plt.savefig("bayes1" + "_" + str(prog_num) + "_" + str(bp) + "_" + test + "_" + all + ".png")
     rms_bp = ascdata.RMSE(y_bp, y_bp_pred)
     print "rms for prognum", prog_num, "at breakpoint", bp, rms_bp
 
 print "Predictions trained on all data"
-#plot_predictions(1, 4194659, X_train_all, y_train_all, wridge_all, "all", "total")
-plot_predictions(2, 4198375, X_train_all, y_train_all, wridge_all, "all", "total")
+plot_predictions(2, int("4001d6",16) , X_train_all, y_train_all, wridge_all, "all", "total")
+plot_predictions(1, int("4014f1",16), X_train_all, y_train_all, wridge_all, "all", "total")
 #plot_predictions(3, 4194873, X_train_all, y_train_all, wridge_all, "all", "total")
 
-print "Test predictions"
-plot_predictions(1, 4194659, X_test_all, y_test_all, wridge_all, "all", "test")
-#plot_predictions(2, 4198375, X_test_all, y_test_all, wridge_all, "all", "test")
-plot_predictions(3, 4194873, X_test_all, y_test_all, wridge_all, "all", "test")
-
-print "Predictions trained on only program data"
-wridge_prog1, X_train_prog1, y_train_prog1, X_test_prog1, y_test_prog1 = get_wridge(X_prog1, y_prog1)
-wridge_prog2, X_train_prog2, y_train_prog2, X_test_prog2, y_test_prog2 = get_wridge(X_prog2, y_prog2)
-wridge_prog3, X_train_prog3, y_train_prog3, X_test_prog3, y_test_prog3 = get_wridge(X_prog3, y_prog3)
-
-#plot_predictions(1, 4194659, X_train_prog1, y_train_prog1, wridge_prog1, "self", "total")
-plot_predictions(2, 4198375, X_train_prog2, y_train_prog2, wridge_prog2, "self", "total")
-#plot_predictions(3, 4194873, X_train_prog3, y_train_prog3, wridge_prog3, "self", "total")
-
-print "Test predictions"
-plot_predictions(1, 4194659, X_test_prog1, y_test_prog1, wridge_prog1, "self", "test")
-#plot_predictions(2, 4198375, X_test_prog2, y_test_prog2, wridge_prog2, "self", "test")
-plot_predictions(3, 4194873, X_test_prog3, y_test_prog3, wridge_prog3, "self", "test")
+# print "Test predictions"
+# plot_predictions(1, 4194659, X_test_all, y_test_all, wridge_all, "all", "test")
+# #plot_predictions(2, 4198375, X_test_all, y_test_all, wridge_all, "all", "test")
+# plot_predictions(3, 4194873, X_test_all, y_test_all, wridge_all, "all", "test")
+#
+# print "Predictions trained on only program data"
+# wridge_prog1, X_train_prog1, y_train_prog1, X_test_prog1, y_test_prog1 = get_wridge(X_prog1, y_prog1)
+# wridge_prog2, X_train_prog2, y_train_prog2, X_test_prog2, y_test_prog2 = get_wridge(X_prog2, y_prog2)
+# wridge_prog3, X_train_prog3, y_train_prog3, X_test_prog3, y_test_prog3 = get_wridge(X_prog3, y_prog3)
+#
+# #plot_predictions(1, 4194659, X_train_prog1, y_train_prog1, wridge_prog1, "self", "total")
+# plot_predictions(2, 4198375, X_train_prog2, y_train_prog2, wridge_prog2, "self", "total")
+# #plot_predictions(3, 4194873, X_train_prog3, y_train_prog3, wridge_prog3, "self", "total")
+#
+# print "Test predictions"
+# plot_predictions(1, 4194659, X_test_prog1, y_test_prog1, wridge_prog1, "self", "test")
+# #plot_predictions(2, 4198375, X_test_prog2, y_test_prog2, wridge_prog2, "self", "test")
+# plot_predictions(3, 4194873, X_test_prog3, y_test_prog3, wridge_prog3, "self", "test")

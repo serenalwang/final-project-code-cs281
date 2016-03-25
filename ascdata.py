@@ -2,28 +2,72 @@ import numpy as np
 from math import sqrt
 from sklearn.metrics import mean_squared_error
 from math import cos, pi
+from os import listdir
+from os.path import isfile, join
 
 ### Methods for reading in ASC data
 
+# Expands the features provided in the asc input file.
+# Resulting feature set:
+# [program name, breakpoint, overall round number, input parameter, run number, total rounds,
+#         current round, hamming, mips, logloss]
+def expand_asc_features(cur_data):
+    expanded_data = np.empty
+    input_number = 0
+    cur_input = 0
+    initialized_expanded_data = False
+    for i in range(cur_data.shape[0]):
+        new_row = cur_data[i]
+        new_input = int(new_row[2])
+        if new_input != cur_input:
+            input_number += 1
+            cur_input = new_input
+        # Replace random input with input number
+        new_row[2] = input_number
+        # Add overall round number
+        new_row = np.insert(new_row,2,i + 1)
+        if not initialized_expanded_data:
+            expanded_data = new_row
+            initialized_expanded_data = True
+        else:
+            expanded_data = np.vstack((expanded_data, new_row))
+    return expanded_data
+
+# Processes asc_data file and cleans up features
+def get_asc_features():
+    asc_data = np.empty
+    initialized_asc_data = False
+    ascfeatures_dir = "ascfeatures/"
+    ascfeatures_files = [f for f in listdir(ascfeatures_dir) if isfile(join(ascfeatures_dir, f))]
+    # ascfeatures_files = ["1-4002bd-1-asc.csv"]
+    for f in ascfeatures_files:
+        cur_data = np.loadtxt(join(ascfeatures_dir, f), delimiter = ',', converters={1:lambda s: int(s, 16)})
+        expanded_data = expand_asc_features(cur_data)
+        if not initialized_asc_data:
+            asc_data = expanded_data
+            initialized_asc_data = True
+        else:
+            asc_data = np.concatenate((asc_data,expanded_data))
+    return asc_data
+
+
 # Reads in asc data from files
 def get_asc_data():
-    n_asc_features = 6
-    asc_data1 = np.loadtxt('program_asc_features.csv', delimiter = ',', skiprows = 1)
-    asc_data2 = np.loadtxt('program_asc_features_temp.csv', delimiter = ',', skiprows = 1)
+    n_asc_features = 10
+    asc_features = get_asc_features()
+    y = asc_features[ : , n_asc_features - 1 ]
+    X = asc_features[ : , :n_asc_features - 1 ]
 
-    asc_data = np.concatenate((asc_data1,asc_data2))
-    y = asc_data[ : , n_asc_features - 1 ]
-    X = asc_data[ : , :n_asc_features - 1 ]
-
-    gprof_data = np.loadtxt('program_gprof_features.csv', delimiter = ',', skiprows = 1)
-    callgrind_data = np.loadtxt('program_callgrind_features.csv', delimiter = ',', skiprows = 1)
+    # gprof_data = np.loadtxt('program_gprof_features.csv', delimiter = ',', skiprows = 1)
+    # callgrind_data = np.loadtxt('program_callgrind_features.csv', delimiter = ',', skiprows = 1)
     text_data = np.loadtxt('program_text_features.csv', delimiter = ',', skiprows = 1)
+    hexdump_data = np.loadtxt('hexdump_1gram_features.csv', delimiter = ',')
 
     X = X.tolist()
     # Add static features to data matrix
     for i in range(len(X)):
         prog_num = X[i][0]
-        X[i] += gprof_data[prog_num - 1].tolist() + callgrind_data[prog_num - 1].tolist() + text_data[prog_num - 1].tolist()
+        X[i] += hexdump_data[prog_num - 1].tolist() + text_data[prog_num - 1].tolist()
     X = np.array(X)
     return X, y
 
@@ -41,6 +85,8 @@ def get_bp_data(prog_num, bp, inX, iny):
              if inX[i][0] == prog_num:
                 outX.append(inX[i])
                 outy.append(iny[i])
+    if len(outX) == 0:
+        print "WARNING: get_bp_data: no data found for bp", bp
     return np.array(outX), np.array(outy)
 
 # Output X, y, s arrays for the bp and prog_num given.
