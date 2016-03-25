@@ -9,7 +9,7 @@ from os.path import isfile, join
 
 # Expands the features provided in the asc input file.
 # Resulting feature set:
-# [program name, breakpoint, overall round number, input parameter, run number, total rounds,
+# [program name, breakpoint, overall round number, input parameter number, run number, total rounds,
 #         current round, hamming, mips, logloss]
 def expand_asc_features(cur_data):
     expanded_data = np.empty
@@ -58,8 +58,8 @@ def get_asc_data():
     y = asc_features[ : , n_asc_features - 1 ]
     X = asc_features[ : , :n_asc_features - 1 ]
 
-    # gprof_data = np.loadtxt('program_gprof_features.csv', delimiter = ',', skiprows = 1)
-    # callgrind_data = np.loadtxt('program_callgrind_features.csv', delimiter = ',', skiprows = 1)
+    gprof_data = np.loadtxt('program_gprof_features.csv', delimiter = ',', skiprows = 1)
+    callgrind_data = np.loadtxt('program_callgrind_features.csv', delimiter = ',', skiprows = 1)
     text_data = np.loadtxt('program_text_features.csv', delimiter = ',', skiprows = 1)
     hexdump_data = np.loadtxt('hexdump_1gram_features.csv', delimiter = ',')
 
