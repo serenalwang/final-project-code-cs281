@@ -1,4 +1,4 @@
 import ascdata
 
-asc_data = ascdata.get_asc_data()
-print asc_data
+# ascdata.save_asc_data()
+X, y = ascdata.load_asc_data()

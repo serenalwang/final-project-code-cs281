@@ -6,6 +6,8 @@ from os import listdir
 from os.path import isfile, join
 
 ### Methods for reading in ASC data
+X_outfile = "X-inputs.npy"
+y_outfile = "y-targets.npy"
 
 # Expands the features provided in the asc input file.
 # Resulting feature set:
@@ -50,25 +52,98 @@ def get_asc_features():
             asc_data = np.concatenate((asc_data,expanded_data))
     return asc_data
 
+# Store objdump and callgrind data in a dictionary
+# key: (program number, ip); value: [objdump data + callgrind ir data]
+def get_ip_data():
+    objdump_ip_data = np.loadtxt('objdump_ip_features.csv', delimiter = ',', converters={1:lambda s: int(s, 16)})
+    callgrind_ir_data = np.loadtxt('callgrind_ir_features.csv', delimiter = ',', converters={1:lambda s: int(s, 16)})
+    ip_dict = {}
+    n_callgrind_features = 2
+    n_objdump_features = 12
+    for row in objdump_ip_data:
+        key = (row[0], row[1])
+        value = row[2:]
+        ip_dict[key] = np.concatenate((value, np.zeros(n_callgrind_features)))
+    for row in callgrind_ir_data:
+        key = (row[0], row[1])
+        value = row[2:]
+        if key in ip_dict:
+            for i in range(len(value)):
+                ip_dict[key][i + n_objdump_features] = value[i]
+        else:
+            ip_dict[key] =  np.concatenate((np.zeros(n_objdump_features),value))
+    return ip_dict
 
 # Reads in asc data from files
-def get_asc_data():
+# Final feature vector: (305)
+# [asc features, hexdump features, text features, gprof features, callgrind features, IP features]
+#
+# asc features: (9)
+# [program name, breakpoint, overall round number, input parameter number, run number, total rounds,
+#  current round, hamming, mips]
+
+# hexdump features: (256)
+# [256 ngrams]
+
+# text features: (3)
+# [number of lines, number of words, number of chars]
+
+# program gprof features: (10)
+# [Num functions, num function calls, total program time,
+#  highest % function time, highest % function calls,
+#  variance of function time,  variance of num function calls,
+#  max num parents for a function, max num children for a function,
+#  num recursive calls]
+
+# program callgrind features: (13)
+# [Ir, Dr, Dw, I1mr, d1mr, D1mw, ILmr, DLmr, DLmw, I1missrate, D1missread, D1misswrite, LLmissrate]
+
+# objdump ip features: (12)
+# [ is jmp, call, mov, lea, cmp, inc, mul, add, or, push,
+#  is target of jmp, distance from target of jmp]
+
+# callgrind ir features: (2)
+# [ ir count, ir % ]
+def get_asc_data_from_files():
     n_asc_features = 10
     asc_features = get_asc_features()
     y = asc_features[ : , n_asc_features - 1 ]
     X = asc_features[ : , :n_asc_features - 1 ]
 
-    gprof_data = np.loadtxt('program_gprof_features.csv', delimiter = ',', skiprows = 1)
-    callgrind_data = np.loadtxt('program_callgrind_features.csv', delimiter = ',', skiprows = 1)
-    text_data = np.loadtxt('program_text_features.csv', delimiter = ',', skiprows = 1)
+    gprof_data = np.loadtxt('program_gprof_features.csv', delimiter = ',')
+    callgrind_data = np.loadtxt('program_callgrind_features.csv', delimiter = ',')
+    text_data = np.loadtxt('program_text_features.csv', delimiter = ',')
     hexdump_data = np.loadtxt('hexdump_1gram_features.csv', delimiter = ',')
 
+    ip_dict = get_ip_data()
+    n_ip_features = 14
+
     X = X.tolist()
-    # Add static features to data matrix
+    # Add program features to data matrix
     for i in range(len(X)):
         prog_num = X[i][0]
-        X[i] += hexdump_data[prog_num - 1].tolist() + text_data[prog_num - 1].tolist()
+        ip = X[i][1]
+        # Add program features
+        X[i] += hexdump_data[prog_num - 1][1:].tolist() + text_data[prog_num - 1][1:].tolist() + gprof_data[prog_num - 1][1:].tolist() + callgrind_data[prog_num - 1][1:].tolist()
+        # Add ip features
+        ip_features = np.zeros(n_ip_features)
+        if (prog_num,ip) in ip_dict:
+            ip_features = ip_dict[(prog_num,ip)]
+        X[i] += ip_features.tolist()
     X = np.array(X)
+    return X, y
+
+# Saves asc data into numpy array files.
+def save_asc_data():
+    X, y = get_asc_data_from_files()
+    np.save(X_outfile,X)
+    np.save(y_outfile,y)
+
+# Loads previously saved asc data.
+# Returns two numpy arrays.
+def load_asc_data():
+    X = np.load(X_outfile)
+    y = np.load(y_outfile)
     return X, y
 
 # Output X and y arrays for the bp and prog_num given.
