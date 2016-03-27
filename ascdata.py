@@ -190,10 +190,11 @@ def shrink_data(inX, iny, n):
                 if np.array_str(inX[i]) in duplicates:
                     print "found duplicate at ip", cur_ip, "prognum", inX[i][0]
                     continue
-                outX.append(inX[i])
-                outy.append(iny[i])
-                duplicates.add(np.array_str(inX[i]))
-                nrounds += 1
+                else:
+                    outX.append(inX[i])
+                    outy.append(iny[i])
+                    duplicates.add(np.array_str(inX[i]))
+                    nrounds += 1
         # First round of new IP value
         else:
             last_ip = cur_ip
@@ -201,7 +202,11 @@ def shrink_data(inX, iny, n):
             outX.append(inX[i])
             outy.append(iny[i])
             duplicates = set(np.array_str(inX[1]))
-    return np.array(outX), np.array(outy)
+    X_shrunk = np.array(outX)
+    y_shrunk = np.array(outy)
+    np.save("X-shrunk.npy",X_shrunk)
+    np.save("y-shrunk.npy",y_shrunk)
+    return X_shrunk, y_shrunk
 
 # Output X and y arrays for the bp and prog_num given.
 # Filters theses from inX and iny.
