@@ -205,7 +205,7 @@ def shrink_data(inX, iny, n):
             else:
                 outX.append(inX[i])
                 outy.append(iny[i])
-                duplicates.add(np.array_str(inX[1]))
+                duplicates.add(np.array_str(inX[i]))
     X_shrunk = np.array(outX)
     y_shrunk = np.array(outy)
     np.save("X-shrunk.npy",X_shrunk)
