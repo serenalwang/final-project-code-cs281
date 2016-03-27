@@ -4,6 +4,7 @@ from sklearn.metrics import mean_squared_error
 from math import cos, pi
 from os import listdir
 from os.path import isfile, join
+from sklearn.metrics import r2_score
 
 ### Methods for reading in ASC data
 X_outfile = "X-inputs.npy"
@@ -146,6 +147,56 @@ def load_asc_data():
     y = np.load(y_outfile)
     return X, y
 
+# Takes first 10 rounds of training for each IP.
+def get_multitask_data(inX, iny):
+    outX = []
+    outy = []
+    last_ip = 0
+    nrounds = 0
+    cur_y = []
+    for i in range(inX.shape[0]):
+        cur_ip = inX[i][1]
+        if cur_ip == last_ip:
+            # Haven't yet filled up all of cur_y yet
+            if nrounds < 10:
+                if nrounds == 9:
+                    cur_y.append(iny[i])
+                    assert(len(cur_y) == 10)
+                    outX.append(inX[i])
+                    outy.append(cur_y)
+                    nrounds += 1
+                else:
+                    cur_y.append(iny[i])
+                    nrounds += 1
+        # First round of new IP value
+        else:
+            last_ip = cur_ip
+            nrounds = 1
+            cur_y = [iny[i]]
+    return np.array(outX), np.array(outy)
+
+# Takes first n rounds of training for each IP.
+def shrink_data(inX, iny, n):
+    outX = []
+    outy = []
+    last_ip = 0
+    nrounds = 0
+    for i in range(inX.shape[0]):
+        cur_ip = inX[i][1]
+        if cur_ip == last_ip:
+            # Haven't yet filled up all of cur_y yet
+            if nrounds < n:
+                outX.append(inX[i])
+                outy.append(iny[i])
+                nrounds += 1
+        # First round of new IP value
+        else:
+            last_ip = cur_ip
+            nrounds = 1
+            outX.append(inX[i])
+            outy.append(iny[i])
+    return np.array(outX), np.array(outy)
+
 # Output X and y arrays for the bp and prog_num given.
 # Filters theses from inX and iny.
 def get_bp_data(prog_num, bp, inX, iny):
@@ -193,8 +244,34 @@ def remove_zeros(inX, iny):
             outy.append(iny[i])
     return np.array(outX), np.array(outy)
 
+# Removes all lines of asc data that are above a certain threshold.
+# A reasonable threshold is crazy = 100
+def remove_crazy(inX, iny, crazy):
+    outX = []
+    outy = []
+    for i in range(inX.shape[0]):
+        if iny[i] < crazy:
+            outX.append(inX[i])
+            outy.append(iny[i])
+    return np.array(outX), np.array(outy)
+
 def RMSE(y, y_pred):
     return sqrt(mean_squared_error(y, y_pred))
+
+def multi_RMSE(y, y_pred):
+    return sqrt(mean_squared_error(y.flatten(), y_pred.flatten()))
+
+def MSE(y,y_pred):
+    return mean_squared_error(y, y_pred)
+
+def multi_MSE(y,y_pred):
+    return mean_squared_error(y.flatten(), y_pred.flatten())
+
+def r2(y, y_pred):
+    return r2_score(y,y_pred)
+
+def multi_r2(y, y_pred):
+    return r2_score(y.flatten(),y_pred.flatten())
 
 # Splits train and test set at random.
 def split_train_test(X, y, fraction_train = 9.0 / 10.0):
