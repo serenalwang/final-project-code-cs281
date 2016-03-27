@@ -199,9 +199,13 @@ def shrink_data(inX, iny, n):
         else:
             last_ip = cur_ip
             nrounds = 1
-            outX.append(inX[i])
-            outy.append(iny[i])
-            duplicates = set(np.array_str(inX[1]))
+            if np.array_str(inX[i]) in duplicates:
+                print "found duplicate at ip", cur_ip, "prognum", inX[i][0]
+                continue
+            else:
+                outX.append(inX[i])
+                outy.append(iny[i])
+                duplicates.add(np.array_str(inX[1]))
     X_shrunk = np.array(outX)
     y_shrunk = np.array(outy)
     np.save("X-shrunk.npy",X_shrunk)
