@@ -2,36 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bba8cf34-4a16-47f3-ac46-5f6205ec4b64" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/multitask_regression.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_1_ips_hamming-distances.png" afterPath="$PROJECT_DIR$/stats/stats_1_ips_hamming-distances.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_1_ips_ir-counts.png" afterPath="$PROJECT_DIR$/stats/stats_1_ips_ir-counts.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_1_ips_loss-values.png" afterPath="$PROJECT_DIR$/stats/stats_1_ips_loss-values.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_2_ips_hamming-distances.png" afterPath="$PROJECT_DIR$/stats/stats_2_ips_hamming-distances.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_2_ips_ir-counts.png" afterPath="$PROJECT_DIR$/stats/stats_2_ips_ir-counts.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_2_ips_loss-values.png" afterPath="$PROJECT_DIR$/stats/stats_2_ips_loss-values.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_3_ips_hamming-distances.png" afterPath="$PROJECT_DIR$/stats/stats_3_ips_hamming-distances.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_3_ips_ir-counts.png" afterPath="$PROJECT_DIR$/stats/stats_3_ips_ir-counts.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_3_ips_loss-values.png" afterPath="$PROJECT_DIR$/stats/stats_3_ips_loss-values.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_4_ips_hamming-distances.png" afterPath="$PROJECT_DIR$/stats/stats_4_ips_hamming-distances.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_4_ips_ir-counts.png" afterPath="$PROJECT_DIR$/stats/stats_4_ips_ir-counts.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_4_ips_loss-values.png" afterPath="$PROJECT_DIR$/stats/stats_4_ips_loss-values.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_5_ips_hamming-distances.png" afterPath="$PROJECT_DIR$/stats/stats_5_ips_hamming-distances.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_5_ips_ir-counts.png" afterPath="$PROJECT_DIR$/stats/stats_5_ips_ir-counts.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_5_ips_loss-values.png" afterPath="$PROJECT_DIR$/stats/stats_5_ips_loss-values.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_6_ips_hamming-distances.png" afterPath="$PROJECT_DIR$/stats/stats_6_ips_hamming-distances.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_6_ips_ir-counts.png" afterPath="$PROJECT_DIR$/stats/stats_6_ips_ir-counts.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_6_ips_loss-values.png" afterPath="$PROJECT_DIR$/stats/stats_6_ips_loss-values.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_7_ips_hamming-distances.png" afterPath="$PROJECT_DIR$/stats/stats_7_ips_hamming-distances.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_7_ips_ir-counts.png" afterPath="$PROJECT_DIR$/stats/stats_7_ips_ir-counts.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/stats_7_ips_loss-values.png" afterPath="$PROJECT_DIR$/stats/stats_7_ips_loss-values.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/final_project_code_12-4_cs281.iml" afterPath="$PROJECT_DIR$/.idea/final_project_code_12-4_cs281.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ascdata.py" afterPath="$PROJECT_DIR$/ascdata.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ascdata_test.py" afterPath="$PROJECT_DIR$/ascdata_test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bayes_regression_simple.py" afterPath="$PROJECT_DIR$/bayes_regression_simple.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gaussianprocess_scikit.py" afterPath="$PROJECT_DIR$/gaussianprocess_scikit.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/stats.py" afterPath="$PROJECT_DIR$/stats.py" />
     </list>
     <ignored path="final_project_code_12-4_cs281.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -52,11 +25,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="gaussianprocess_scikit.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="gaussianprocess_scikit.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gaussianprocess_scikit.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="4.6035504">
-              <caret line="102" column="49" selection-start-line="102" selection-start-column="49" selection-end-line="102" selection-end-column="49" />
+            <state vertical-scroll-proportion="-3.409091">
+              <caret line="18" column="17" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -71,14 +44,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ascdata.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ascdata.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ascdata.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="190" column="28" selection-start-line="190" selection-start-column="28" selection-end-line="190" selection-end-column="28" />
+            <state vertical-scroll-proportion="0.45553538">
+              <caret line="183" column="22" selection-start-line="183" selection-start-column="22" selection-end-line="183" selection-end-column="22" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ascdata_test.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ascdata_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="8" column="70" selection-start-line="8" selection-start-column="70" selection-end-line="8" selection-end-column="70" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -106,11 +89,11 @@
         <option value="$PROJECT_DIR$/ascfeatures/1-400144-2.csv" />
         <option value="$PROJECT_DIR$/program_callgrind_features.csv" />
         <option value="$PROJECT_DIR$/stats.py" />
-        <option value="$PROJECT_DIR$/ascdata_test.py" />
         <option value="$PROJECT_DIR$/bayes_regression_simple.py" />
         <option value="$PROJECT_DIR$/multitask_regression.py" />
-        <option value="$PROJECT_DIR$/ascdata.py" />
         <option value="$PROJECT_DIR$/gaussianprocess_scikit.py" />
+        <option value="$PROJECT_DIR$/ascdata.py" />
+        <option value="$PROJECT_DIR$/ascdata_test.py" />
       </list>
     </option>
   </component>
@@ -188,7 +171,7 @@
       <recent name="C:\Users\serenalwang\Documents\Harvard_Senior_Spring\Thesis\code\final-project-code-cs281\stats" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.gaussianprocess_scikit">
+  <component name="RunManager" selected="Python.ascdata_test">
     <configuration default="false" name="ascdata_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -405,10 +388,10 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.gaussianprocess_scikit" />
-        <item index="1" class="java.lang.String" itemvalue="Python.multitask_regression" />
-        <item index="2" class="java.lang.String" itemvalue="Python.bayes_regression_simple" />
-        <item index="3" class="java.lang.String" itemvalue="Python.ascdata_test" />
+        <item index="0" class="java.lang.String" itemvalue="Python.ascdata_test" />
+        <item index="1" class="java.lang.String" itemvalue="Python.gaussianprocess_scikit" />
+        <item index="2" class="java.lang.String" itemvalue="Python.multitask_regression" />
+        <item index="3" class="java.lang.String" itemvalue="Python.bayes_regression_simple" />
         <item index="4" class="java.lang.String" itemvalue="Python.stats" />
       </list>
     </recent_temporary>
@@ -466,7 +449,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/ascdata_test.py</url>
-          <line>7</line>
+          <line>15</line>
           <option name="timeStamp" value="33" />
         </line-breakpoint>
       </breakpoints>
@@ -758,14 +741,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ascdata_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="66" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="66" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/multitask_1_4194857.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -801,27 +776,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ascdata.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="190" column="28" selection-start-line="190" selection-start-column="28" selection-end-line="190" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gaussianprocess_1_4194857.png">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ascdata_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="8" column="70" selection-start-line="8" selection-start-column="70" selection-end-line="8" selection-end-column="70" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/gaussianprocess_scikit.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="4.6035504">
-          <caret line="102" column="49" selection-start-line="102" selection-start-column="49" selection-end-line="102" selection-end-column="49" />
+        <state vertical-scroll-proportion="-3.409091">
+          <caret line="18" column="17" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ascdata.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.45553538">
+          <caret line="183" column="22" selection-start-line="183" selection-start-column="22" selection-end-line="183" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>

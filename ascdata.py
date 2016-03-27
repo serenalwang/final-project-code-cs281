@@ -181,13 +181,18 @@ def shrink_data(inX, iny, n):
     outy = []
     last_ip = 0
     nrounds = 0
+    duplicates = set()
     for i in range(inX.shape[0]):
         cur_ip = inX[i][1]
         if cur_ip == last_ip:
             # Haven't yet filled up all of cur_y yet
             if nrounds < n:
+                if np.array_str(inX[i]) in duplicates:
+                    print "found duplicate at ip", cur_ip, "prognum", inX[i][0]
+                    continue
                 outX.append(inX[i])
                 outy.append(iny[i])
+                duplicates.add(np.array_str(inX[i]))
                 nrounds += 1
         # First round of new IP value
         else:
@@ -195,6 +200,7 @@ def shrink_data(inX, iny, n):
             nrounds = 1
             outX.append(inX[i])
             outy.append(iny[i])
+            duplicates = set(np.array_str(inX[1]))
     return np.array(outX), np.array(outy)
 
 # Output X and y arrays for the bp and prog_num given.
