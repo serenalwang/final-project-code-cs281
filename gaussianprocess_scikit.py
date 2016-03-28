@@ -1,11 +1,14 @@
 import ascdata
 import numpy as np
 from sklearn import gaussian_process
+from matplotlib import use
+use("Agg")
 import matplotlib.pyplot as plt
 from sklearn.cross_validation import KFold
 from math import sqrt
 from tempfile import mkdtemp
 import os.path as path
+
 
 ### IMPORT DATA ###
 print "IMPORTING DATA"
@@ -44,6 +47,7 @@ def plot_actualvpredicted(y, y_pred):
     plt.plot(ones, ones)
     plt.savefig("gaussianprocess" + "_" + "actualvpredicted" + ".png")
 
+print "plotting actual v. predicted"
 plot_actualvpredicted(y_test, y_pred_test)
 
 # Get cross validation RMS and r^2
