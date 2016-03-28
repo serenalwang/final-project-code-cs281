@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 import matplotlib.pyplot as plt
+from sklearn.cross_validation import KFold
 
 import autograd.numpy as np
 import autograd.numpy.random as npr
@@ -16,12 +17,15 @@ import ascdata
 ### IMPORT DATA ###
 print "IMPORTING DATA"
 
-X_raw, y_raw = ascdata.get_asc_data()
-X, y = ascdata.remove_zeros(X_raw, y_raw)
+# X_raw, y_raw = ascdata.load_asc_data()
+# X, y = ascdata.remove_zeros(X_raw, y_raw)
+
+X,y = ascdata.load_shrunken_asc_data()
+
 # Data isolated for all breakpoints from a specific program.
-X_prog1, y_prog1 = ascdata.get_bp_data(1, 0, X, y)
-X_prog2, y_prog2 = ascdata.get_bp_data(2, 0, X, y)
-X_prog3, y_prog3 = ascdata.get_bp_data(3, 0, X, y)
+# X_prog1, y_prog1 = ascdata.get_bp_data(1, 0, X, y)
+# X_prog2, y_prog2 = ascdata.get_bp_data(2, 0, X, y)
+# X_prog3, y_prog3 = ascdata.get_bp_data(3, 0, X, y)
 
 D = 1
 d = 10
@@ -112,16 +116,44 @@ def get_Aopt(inX, iny):
 
 Aopt_all, X_train_all, y_train_all, s_train_all, X_test_all, y_test_all, s_test_all, LLHs, LLH_xs = get_Aopt(X, y)
 
-# y_test_pred = np.dot(X_test_all, wridge_all)
-# rms = sqrt(mean_squared_error(y_test_all, y_test_pred))
-# print "total rms:", rms
-#
 # ### PLOT PREDICTIONS ###
 print "PLOTTING PREDICTIONS"
 
 y_test_pred = y_bp_pred = get_predictions(Aopt_all, X_test_all, s_test_all)
-rms = ascdata.RMSE(y_test_pred, y_test_all)
+rms = ascdata.RMSE(y_test_all, y_test_pred)
 print "total rms:", rms
+
+r2 = ascdata.r2(y_test_all, y_test_pred)
+print "total r2:", r2
+
+# # Get cross validation RMS
+# def get_kfold_scores(inX, iny, k):
+#     N = inX.shape[0]
+#     kf = KFold(N, k, shuffle=True)
+#     mses=[]
+#     r2s=[]
+#     for train_index, test_index in kf:
+#         kf_X_train, kf_X_test = inX[train_index], inX[test_index]
+#         kf_y_train, kf_y_test = iny[train_index], iny[test_index]
+#         kf_X_train = np.concatenate((kf_X_train, np.ones((kf_X_train.shape[ 0 ], 1))), 1)
+#         kf_X_test = np.concatenate((kf_X_test, np.ones((kf_X_test.shape[ 0 ], 1))), 1)
+#         X_test_less, s_test = ascdata.split_X_s(X_test)
+#         wridge = get_wridge_given_sets(kf_X_train, kf_y_train, kf_X_test, kf_y_test)
+#         kf_y_test_pred = np.dot(kf_X_test, wridge)
+#         mse = mean_squared_error(kf_y_test, kf_y_test_pred)
+#         mses.append(mse)
+#         print "mse:", mse
+#         r2 = ascdata.r2(kf_y_test, kf_y_test_pred)
+#         r2s.append(r2)
+#         print "r2:", r2
+#     overall_r2 = np.mean(r2s)
+#     overall_mse = np.mean(mses)
+#     overall_rmse = sqrt(overall_mse)
+#     print "KFold cross validation MSE:", overall_mse
+#     print "KFold cross validation RMSE:", overall_rmse
+#     print "KFold cross validation r2:", overall_r2
+#
+# get_kfold_scores(X,y,10)
 
 # Set up plot
 fig = plt.figure(1, facecolor='white')
@@ -130,11 +162,11 @@ plt.show(block=False)
 
 print "RMS for all data for each bp"
 plot_predictions(1, 4194659, X_train_all, y_train_all, s_train_all, Aopt_all, "total")
-plot_predictions(3, 4194873, X_train_all, y_train_all, s_train_all, Aopt_all, "total")
+# plot_predictions(3, 4194873, X_train_all, y_train_all, s_train_all, Aopt_all, "total")
 
 print "RMS for test data for each bp"
 plot_predictions(1, 4194659, X_test_all, y_test_all, s_test_all, Aopt_all, "test")
-plot_predictions(3, 4194873, X_test_all, y_test_all, s_test_all, Aopt_all, "test")
+# plot_predictions(3, 4194873, X_test_all, y_test_all, s_test_all, Aopt_all, "test")
 
 plt.figure(2, facecolor='white')
 plt.plot(LLH_xs, LLHs)

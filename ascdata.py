@@ -5,6 +5,7 @@ from math import cos, pi
 from os import listdir
 from os.path import isfile, join
 from sklearn.metrics import r2_score
+from sklearn import preprocessing
 
 ### Methods for reading in ASC data
 X_outfile = "X-inputs.npy"
@@ -77,7 +78,7 @@ def get_ip_data():
 
 # Reads in asc data from files
 # Final feature vector: (305)
-# [asc features, hexdump features, text features, gprof features, callgrind features, IP features]
+# [asc features, hexdump features, text features, gprof features, callgrind features, IP features, IR features]
 #
 # asc features: (9)
 # [program name, breakpoint, overall round number, input parameter number, run number, total rounds,
@@ -134,6 +135,32 @@ def get_asc_data_from_files():
     X = np.array(X)
     return X, y
 
+# Get names of all features
+ascfeatures = ["program name", "IP value", "overall round number", "input parameter number", "run number", "total rounds",
+               "current round", "hamming", "mips"]
+hex_chars = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f']
+hexfeatures = []
+for char1 in hex_chars:
+    for char2 in hex_chars:
+        gram = char1 + char2
+        hexfeatures.append(gram)
+textfeatures = ["lines of code", "words of code", "bytes of code"]
+gproffeatures = ["Num functions", "num function calls", "total program time", "highest % function time",
+                 "highest % function calls",  "variance of function time",  "variance of num function calls",
+                 "max num parents for a function", "max num children for a function",  "num recursive calls"]
+callgrindfeatures = ["L1 instruction reads", "L1 data reads", "L1 data writes", "L1 instruction read misses",
+                     "L1 data read misses", "L1 data write misses", "L2 instruction read misses",
+                     "L2 data read misses", "L2 data write misses", "L1 instruction read miss rate",
+                     "L1 data read miss rate",
+                     "L1 data write miss rate", "L2 data and instruction miss rate"]
+objdumpipfeatures = [ "jmp", "call", "mov", "lea", "cmp", "inc", "mul", "add", "or", "push",
+                      "is target of jmp", "distance from target of jmp"]
+callgrindirfeatures = [ "ir count for IP value", "ir % for IP value" ]
+featurenames = ascfeatures + hexfeatures + textfeatures + gproffeatures + callgrindfeatures + objdumpipfeatures + callgrindirfeatures
+
+def get_feature_names():
+    return featurenames
+
 # Saves asc data into numpy array files.
 def save_asc_data():
     X, y = get_asc_data_from_files()
@@ -146,6 +173,56 @@ def load_asc_data():
     X = np.load(X_outfile)
     y = np.load(y_outfile)
     return X, y
+
+def load_shrunken_asc_data():
+    X = np.load("X-shrunk.npy")
+    y = np.load("y-shrunk.npy")
+    return X, y
+
+def load_nonzero_asc_data():
+    X = np.load("X-nonzero.npy")
+    y = np.load("y-nonzero.npy")
+    return X,y
+
+def load_noncrazy_asc_data():
+    X = np.load("X-noncrazy.npy")
+    y = np.load("y-noncrazy.npy")
+    return X,y
+
+# Returns X_good, y_good, X_bad, y_bad
+def load_shrunken_progs():
+    X_good = np.load("X_good_shrunken.npy")
+    y_good = np.load("y_good_shrunken.npy")
+    X_bad = np.load("X_bad_shrunken.npy")
+    y_bad = np.load("y_bad_shrunken.npy")
+    return X_good, y_good, X_bad, y_bad
+
+def load_nonzero_progs():
+    X_good = np.load("X_good_nonzero.npy")
+    y_good = np.load("y_good_nonzero.npy")
+    X_bad = np.load("X_bad_nonzero.npy")
+    y_bad = np.load("y_bad_nonzero.npy")
+    X_sbad = np.load("X_superbad_nonzero.npy")
+    y_sbad = np.load("y_superbad_nonzero.npy")
+    return X_good, y_good, X_bad, y_bad, X_sbad, y_sbad
+
+# Returns X_good_noprog, y_good_noprog, X_bad_noprog, y_bad_noprog
+# Sets contain entire data set except the program number given.
+def load_shrunken_noprogs():
+    X_good = np.load("X_good_noprog_shrunken.npy")
+    y_good = np.load("y_good_noprog_shrunken.npy")
+    X_bad = np.load("X_bad_noprog_shrunken.npy")
+    y_bad = np.load("y_bad_noprog_shrunken.npy")
+    return X_good, y_good, X_bad, y_bad
+
+def load_nonzero_noprogs():
+    X_good = np.load("X_good_noprog_nonzero.npy")
+    y_good = np.load("y_good_noprog_nonzero.npy")
+    X_bad = np.load("X_bad_noprog_nonzero.npy")
+    y_bad = np.load("y_bad_noprog_nonzero.npy")
+    X_sbad = np.load("X_superbad_noprog_nonzero.npy")
+    y_sbad = np.load("y_superbad_noprog_nonzero.npy")
+    return X_good, y_good, X_bad, y_bad, X_sbad, y_sbad
 
 # Takes first 10 rounds of training for each IP.
 def get_multitask_data(inX, iny):
@@ -230,6 +307,18 @@ def get_bp_data(prog_num, bp, inX, iny):
         print "WARNING: get_bp_data: no data found for bp", bp
     return np.array(outX), np.array(outy)
 
+# Output X and y arrays with all data points EXCEPT for the program given.
+def get_all_but_prog_data(prog_num, inX, iny):
+    outX = []
+    outy = []
+    for i in range(inX.shape[0]):
+         if inX[i][0] != prog_num:
+            outX.append(inX[i])
+            outy.append(iny[i])
+    if len(outX) == 0:
+        print "WARNING: get_prog_data: no data found for prog", prog_num
+    return np.array(outX), np.array(outy)
+
 # Output X, y, s arrays for the bp and prog_num given.
 # Filters these from inX, iny, and ins.
 def get_bp_data_s(prog_num, bp, inX, iny, ins):
@@ -257,7 +346,11 @@ def remove_zeros(inX, iny):
         if iny[i] != 0:
             outX.append(inX[i])
             outy.append(iny[i])
-    return np.array(outX), np.array(outy)
+    X_nonzero = np.array(outX)
+    y_nonzero = np.array(outy)
+    np.save("X-nonzero.npy",X_nonzero)
+    np.save("y-nonzero.npy",y_nonzero)
+    return X_nonzero, y_nonzero
 
 # Removes all lines of asc data that are above a certain threshold.
 # A reasonable threshold is crazy = 100
@@ -268,7 +361,15 @@ def remove_crazy(inX, iny, crazy):
         if iny[i] < crazy:
             outX.append(inX[i])
             outy.append(iny[i])
-    return np.array(outX), np.array(outy)
+    X_noncrazy = np.array(outX)
+    y_noncrazy = np.array(outy)
+    np.save("X-noncrazy.npy",X_noncrazy)
+    np.save("y-noncrazy.npy",y_noncrazy)
+    return X_noncrazy, y_noncrazy
+
+# Run this on the entire data set, before splitting into train and test.
+def scale_data(inX):
+    return preprocessing.normalize(inX, norm='l2')
 
 def RMSE(y, y_pred):
     return sqrt(mean_squared_error(y, y_pred))

@@ -48,27 +48,27 @@ if __name__ == '__main__':
 
     ### IMPORT DATA ###
     print("IMPORTING DATA")
-    X_raw, y_raw = ascdata.get_asc_data()
+    X_raw, y_raw = ascdata.load_asc_data()
     X, y = ascdata.remove_zeros(X_raw, y_raw)
     X_train, y_train, X_test, y_test = ascdata.split_train_test(X, y)
-    X_bp1, y_bp1 = ascdata.get_bp_data(1, 4194659, X_train, y_train)
-    X_bp2, y_bp2 = ascdata.get_bp_data(3, 4194873, X_train, y_train)
+    # X_bp1, y_bp1 = ascdata.get_bp_data(1, 4194659, X_train, y_train)
+    # X_bp2, y_bp2 = ascdata.get_bp_data(3, 4194873, X_train, y_train)
 
     objective = lambda weights, t: -logprob(weights, X_train, y_train)
 
-    def plot_initial_data(inX, iny, ax):
-        plot_inputs = inX.T[2]
-        ax.plot(plot_inputs, iny.ravel(), 'bx')
+    # def plot_initial_data(inX, iny, ax):
+    #     plot_inputs = inX.T[2]
+    #     ax.plot(plot_inputs, iny.ravel(), 'bx')
+    #
+    # # Set up figure.
+    # fig = plt.figure(1, facecolor='white')
+    # ax1 = fig.add_subplot(211, frameon=False)
+    # ax2 = fig.add_subplot(212, frameon=False)
+    #
+    # plot_initial_data(X_bp1, y_bp1, ax1)
+    # plot_initial_data(X_bp2, y_bp2, ax2)
 
-    # Set up figure.
-    fig = plt.figure(1, facecolor='white')
-    ax1 = fig.add_subplot(211, frameon=False)
-    ax2 = fig.add_subplot(212, frameon=False)
-
-    plot_initial_data(X_bp1, y_bp1, ax1)
-    plot_initial_data(X_bp2, y_bp2, ax2)
-
-    plt.show()
+    # plt.show()
 
     def plot_prediction_data(inX, iny, params, ax, prog_num, bp):
         ax.cla()
@@ -100,9 +100,9 @@ if __name__ == '__main__':
     rs = npr.RandomState(0)
     init_params = 10 * rs.randn(num_weights)
 
-    #print("Optimizing network parameters...")
-    #optimized_params = adam(grad(objective), init_params,
-                            #step_size=0.5, num_iters=100, callback=callback)
+    print("Optimizing network parameters...")
+    optimized_params = adam(grad(objective), init_params,
+                            step_size=0.5, num_iters=100, callback=callback)
 
     # fig.savefig('neuralnet_singletask_crossents.png')
     # plt.figure(2, facecolor='white')

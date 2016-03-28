@@ -9,25 +9,12 @@ import os.path as path
 
 ### IMPORT DATA ###
 print "IMPORTING DATA"
-X_raw, y_raw = ascdata.load_asc_data()
-print "done loading data"
-X,y = ascdata.remove_zeros(X_raw, y_raw)
-print "done removing zeros"
-del X_raw, y_raw
-# X,y = ascdata.remove_crazy(X_nonzero,y_nonzero, 100)
-# print "done removing noncrazy"
-# X, y = ascdata.shrink_data(X_nonzero, y_nonzero, 2)
+X, y = ascdata.load_shrunken_asc_data()
 X_train, y_train, X_test, y_test = ascdata.split_train_test(X, y)
 # print "done splitting data"
 # X_bp1, y_bp1 = ascdata.get_bp_data(1, int("400229",16), X_train, y_train)
 # X_bp1_test, y_bp1_test = ascdata.get_bp_data(1, int("400229",16), X_test, y_test)
 # del X_train, y_train, X_test, y_test
-
-# filename = path.join(mkdtemp(), 'newfile.dat')
-# fp_X_train = np.memmap(filename, dtype='float32', mode='w+', shape=X_train.shape)
-# fp_X_train[:] = X_train[:]
-#
-# del X_train
 
 # X_bp1_test, y_bp1_test = ascdata.get_bp_data(1, 4194659, X_test, y_test)
 # X_bp2, y_bp2 = ascdata.get_bp_data(3, 4194873, X, y)
@@ -45,11 +32,19 @@ def get_predictions(inXtest):
     return y_pred
 
 y_pred_test = get_predictions(X_test)
-
 rms_test = ascdata.RMSE(y_test, y_pred_test)
 print "rms test", rms_test
+r2_test = ascdata.r2(y_test, y_pred_test)
+print "r2 test", r2_test
 
-del y_pred_test
+def plot_actualvpredicted(y, y_pred):
+    plt.cla()
+    plt.scatter(y_pred, y)
+    ones = range(int(max(y_pred)))
+    plt.plot(ones, ones)
+    plt.savefig("gaussianprocess" + "_" + "actualvpredicted" + ".png")
+
+plot_actualvpredicted(y_test, y_pred_test)
 
 # Get cross validation RMS and r^2
 def get_kfold_scores(inX, iny, k):
@@ -74,7 +69,7 @@ def get_kfold_scores(inX, iny, k):
     print "KFold cross validation RMSE:", overall_rmse
     print "KFold cross validation r2:", overall_r2
 
-get_kfold_scores(X,y,10)
+# get_kfold_scores(X,y,10)
 
 ### PLOT PREDICTIONS ###
 print "PLOTTING PREDICTIONS"
@@ -89,21 +84,57 @@ def plot_predictions(inX, iny, iny_pred, prog_num, bp, test):
     bp_r2 = ascdata.r2(iny, iny_pred)
     print "r2 total for prognum", prog_num, "at breakpoint", bp, bp_r2
 
-X_bp1, y_bp1 = ascdata.get_bp_data(1, int("400229",16), X, y)
-X_bp1_test, y_bp1_test = ascdata.get_bp_data(1, int("400229",16), X_test, y_test)
+print "Predictions trained on all data"
+# # good ip
+X_bp1, y_bp1 = ascdata.get_bp_data(5, int("40024f",16), X, y)
+
+# # bad ip
+X_bp2, y_bp2 = ascdata.get_bp_data(1, int("4014d2",16), X, y)
+
 y_pred_bp1 = get_predictions(X_bp1)
-y_pred_bp1_test = get_predictions(X_bp1_test)
+y_pred_bp2 = get_predictions(X_bp2)
+
+plot_predictions(X_bp1, y_bp1, y_pred_bp1, 5, int("40024f",16), "total")
+plot_predictions(X_bp2, y_bp2, y_pred_bp2, 1, int("4014d2",16), "total")
+
 # # y_pred_bp2 = get_predictions(X_bp2)
 # # y_pred_bp2_test = get_predictions(X_bp2_test)
 # # y_pred_bp3 = get_predictions(X_bp3)
 # #y_pred_bp3_test = get_predictions(X_bp3_test)
 #
 # print "RMS for all data for each bp"
-plot_predictions(X_bp1, y_bp1, y_pred_bp1, 1, int("400229",16), "total")
+# plot_predictions(X_bp1, y_bp1, y_pred_bp1, 1, int("400229",16), "total")
 # plot_predictions(X_bp2, y_bp2, y_pred_bp2, "3", "4194873", "total")
 # plot_predictions(X_bp3, y_bp3, y_pred_bp3, "2", "4198375", "total")
 
-print "RMS for test data for each bp"
-plot_predictions(X_bp1_test, y_bp1_test, y_pred_bp1_test, 1, int("400229",16), "test")
+# print "RMS for test data for each bp"
+# plot_predictions(X_bp1_test, y_bp1_test, y_pred_bp1_test, 1, int("400229",16), "test")
 # plot_predictions(X_bp2_test, y_bp2_test, y_pred_bp2_test, "3", "4194873", "test")
 #plot_predictions(X_bp3_test, y_bp3_test, y_pred_bp3_test, "2", "4198375", "test")
+
+print "Predictions trained on only program data"
+# load program data
+X_prog1, y_prog1, X_prog2, y_prog2 = ascdata.load_shrunken_progs()
+
+gp = gaussian_process.GaussianProcess(theta0=1e-1, thetaL=1e-3, thetaU=1, nugget=y_prog1+20)
+gp.fit(X_prog1, y_prog1)
+y_pred_bp1 = get_predictions(X_bp1)
+plot_predictions(X_bp1, y_bp1, y_pred_bp1, 5, int("40024f",16), "self")
+
+gp = gaussian_process.GaussianProcess(theta0=1e-1, thetaL=1e-3, thetaU=1, nugget=y_prog2+20)
+gp.fit(X_prog2, y_prog2)
+y_pred_bp2 = get_predictions(X_bp2)
+plot_predictions(X_bp2, y_bp2, y_pred_bp2, 1, int("4014d2",16), "self")
+
+print "Predictions trained on all but program data"
+X_noprog1, y_noprog1, X_noprog2, y_noprog2 = ascdata.load_shrunken_noprogs()
+
+gp = gaussian_process.GaussianProcess(theta0=1e-1, thetaL=1e-3, thetaU=1, nugget=y_noprog1+20)
+gp.fit(X_noprog1, y_noprog1)
+y_pred_bp1 = get_predictions(X_bp1)
+plot_predictions(X_bp1, y_bp1, y_pred_bp1, 5, int("40024f",16), "noprog")
+
+gp = gaussian_process.GaussianProcess(theta0=1e-1, thetaL=1e-3, thetaU=1, nugget=y_noprog2+20)
+gp.fit(X_noprog2, y_noprog2)
+y_pred_bp2 = get_predictions(X_bp2)
+plot_predictions(X_bp2, y_bp2, y_pred_bp2, 1, int("4014d2",16), "noprog")
